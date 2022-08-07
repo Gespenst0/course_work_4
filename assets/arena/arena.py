@@ -1,14 +1,15 @@
 from assets.arena import BaseSingleton
 from assets.units import BaseUnit
+from typing import Optional
 
 
 class Arena(metaclass=BaseSingleton):
     """Класс арены"""
     STAMINA_RECOVERY_PER_TURN: float = 1
-    player: BaseUnit = None
-    enemy: BaseUnit = None
+    player: Optional[BaseUnit] = None
+    enemy: Optional[BaseUnit] = None
     game_on: bool = False
-    battle_result: str = None
+    battle_result: Optional[str] = None
 
     def start_game(self, player: BaseUnit, enemy: BaseUnit) -> None:
         """Старт игры"""
@@ -16,17 +17,17 @@ class Arena(metaclass=BaseSingleton):
         self.enemy = enemy
         self.game_on = True
 
-    def player_attack(self) -> str:
+    def player_attack(self):
         """Атака игрока"""
         player_result = self.player.attack(target=self.enemy)
         return player_result + " " + self.next_turn()
 
-    def player_use_skill(self) -> str:
+    def player_use_skill(self):
         """Использование абилки"""
         player_result = self.player.use_skill(target=self.enemy)
         return player_result + " " + self.next_turn()
 
-    def next_turn(self) -> str:
+    def next_turn(self):
         """Проверить хп игрока, восстановить выносливость и вызвать атаку противника"""
         if self._check_health():
             self._regenerate_stamina()
@@ -35,7 +36,7 @@ class Arena(metaclass=BaseSingleton):
             return enemy_result
         return self.battle_result
 
-    def _regenerate_stamina(self) -> None:
+    def _regenerate_stamina(self):
         """Регенерация выносливости"""
         player_stamina_recovery = self.STAMINA_RECOVERY_PER_TURN * self.player.unit_class.stamina_modifier
         enemy_stamina_recovery = self.STAMINA_RECOVERY_PER_TURN * self.enemy.unit_class.stamina_modifier
@@ -50,7 +51,7 @@ class Arena(metaclass=BaseSingleton):
         print(f'Игрок восстановлено выносливости: {player_stamina_recovery}')
         print(f'Враг восстановлено выносливости: {player_stamina_recovery}')
 
-    def _check_health(self) -> bool | None:
+    def _check_health(self):
         """Check if players have health left"""
         print(f'Здоровье игрока: {self.player.health_points_}')
         print(f'Здоровье врага: {self.enemy.health_points_}')
@@ -69,7 +70,7 @@ class Arena(metaclass=BaseSingleton):
 
         self._finish_game()
 
-    def _finish_game(self) -> None:
+    def _finish_game(self):
         """Конец игры"""
         self._instances = {}
         self.game_on = False

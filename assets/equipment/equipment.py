@@ -22,7 +22,7 @@ class Equipment:
                     weapons=WeaponSchema(many=True).load(data['weapons']),
                     armor=ArmorSchema(many=True).load(data['armors']))
 
-    def get_weapon(self, weapon_name: str) -> Weapon:
+    def get_weapon(self, weapon_name: str):
         """Получить оружие по его названию"""
         for weapon in self.equipment.weapons:
             if weapon.name == weapon_name:
@@ -32,7 +32,7 @@ class Equipment:
         """Получить список всего оружия"""
         return [weapon.name for weapon in self.equipment.weapons]
 
-    def get_armor(self, armor_name: str) -> Armor:
+    def get_armor(self, armor_name: str):
         """Получить броню по названию"""
         for armor in self.equipment.armor:
             if armor.name == armor_name:

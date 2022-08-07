@@ -57,7 +57,7 @@ class BaseUnit(ABC):
         """Использование абилки"""
         if self.skill_used:
             return (f"{self.name} попытался использовать {self.unit_class.skill.name}, "
-                    f"но у него не хватило выносливости.")
+                    f"но прием уже был применен.")
         self.skill_used = True
         return self.unit_class.skill.use(user=self, target=target)
 
