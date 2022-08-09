@@ -7,7 +7,7 @@ class FerociousKick(BaseSkill):
     damage: float = 12.0
     stamina_required: float = 6.0
 
-    def _skill_effect(self):
+    def _skill_effect(self) -> str:
         """Уменьшить хп врага и отнять стамину использовавшего скил"""
         self.target.health_points_ -= self.damage
         self.user.stamina_points_ -= self.stamina_required

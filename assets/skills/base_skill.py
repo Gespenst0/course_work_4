@@ -1,6 +1,6 @@
 from __future__ import annotations
 from abc import ABC, abstractmethod
-from typing import TYPE_CHECKING, Optional
+from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from assets.units import BaseUnit
@@ -8,17 +8,17 @@ if TYPE_CHECKING:
 
 class BaseSkill(ABC):
     """Базоввый класс для абилок"""
-    name: Optional[str] = None
+    name: str = ""
     damage: float = 0
     stamina_required: float = 0
-    user = None
-    target = None
+    user: BaseUnit
+    target: BaseUnit
 
     @abstractmethod
     def _skill_effect(self):
         pass
 
-    def use(self, user: BaseUnit, target: BaseUnit) -> str:
+    def use(self, user: BaseUnit, target: BaseUnit):
         """Использовать абилку, если достаточно выносливости"""
         self.user = user
         self.target = target

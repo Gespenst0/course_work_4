@@ -1,15 +1,16 @@
+from typing import Dict
+
 from assets.arena import BaseSingleton
 from assets.units import BaseUnit
-from typing import Optional
 
 
 class Arena(metaclass=BaseSingleton):
     """Класс арены"""
     STAMINA_RECOVERY_PER_TURN: float = 1
-    player: Optional[BaseUnit] = None
-    enemy: Optional[BaseUnit] = None
     game_on: bool = False
-    battle_result: Optional[str] = None
+    battle_result: str = ""
+    player: BaseUnit
+    enemy: BaseUnit
 
     def start_game(self, player: BaseUnit, enemy: BaseUnit) -> None:
         """Старт игры"""
@@ -17,17 +18,17 @@ class Arena(metaclass=BaseSingleton):
         self.enemy = enemy
         self.game_on = True
 
-    def player_attack(self):
+    def player_attack(self) -> str:
         """Атака игрока"""
         player_result = self.player.attack(target=self.enemy)
         return player_result + " " + self.next_turn()
 
-    def player_use_skill(self):
+    def player_use_skill(self) -> str:
         """Использование абилки"""
         player_result = self.player.use_skill(target=self.enemy)
         return player_result + " " + self.next_turn()
 
-    def next_turn(self):
+    def next_turn(self) -> str:
         """Проверить хп игрока, восстановить выносливость и вызвать атаку противника"""
         if self._check_health():
             self._regenerate_stamina()
@@ -36,7 +37,7 @@ class Arena(metaclass=BaseSingleton):
             return enemy_result
         return self.battle_result
 
-    def _regenerate_stamina(self):
+    def _regenerate_stamina(self) -> None:
         """Регенерация выносливости"""
         player_stamina_recovery = self.STAMINA_RECOVERY_PER_TURN * self.player.unit_class.stamina_modifier
         enemy_stamina_recovery = self.STAMINA_RECOVERY_PER_TURN * self.enemy.unit_class.stamina_modifier
@@ -48,13 +49,8 @@ class Arena(metaclass=BaseSingleton):
         if self.enemy.stamina_points_ > self.enemy.unit_class.max_stamina:
             self.enemy.stamina_points_ = self.enemy.unit_class.max_stamina
 
-        print(f'Игрок восстановлено выносливости: {player_stamina_recovery}')
-        print(f'Враг восстановлено выносливости: {player_stamina_recovery}')
-
-    def _check_health(self):
-        """Check if players have health left"""
-        print(f'Здоровье игрока: {self.player.health_points_}')
-        print(f'Здоровье врага: {self.enemy.health_points_}')
+    def _check_health(self) -> bool:
+        """Проверить здоровье игрока"""
 
         if self.player.health_points_ > 0 and self.enemy.health_points_ > 0:
             return True
@@ -70,7 +66,13 @@ class Arena(metaclass=BaseSingleton):
 
         self._finish_game()
 
-    def _finish_game(self):
+        return False
+
+    def _finish_game(self) -> None:
         """Конец игры"""
-        self._instances = {}
+        self._instances: Dict = {}
         self.game_on = False
+
+
+
+

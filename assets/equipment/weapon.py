@@ -22,3 +22,7 @@ class Weapon:
 
 
 WeaponSchema = marshmallow_dataclass.class_schema(Weapon)
+
+
+
+

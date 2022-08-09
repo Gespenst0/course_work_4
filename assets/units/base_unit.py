@@ -6,6 +6,7 @@ from assets.classes import UnitClass
 
 
 class BaseUnit(ABC):
+    """Base class for units"""
 
     def __init__(self, name: str, unit_class: UnitClass, weapon: Weapon, armor: Armor):
         self.name = name
@@ -15,7 +16,7 @@ class BaseUnit(ABC):
         self.weapon = weapon
         self.armor = armor
         self.skill_used: bool = False
-        
+
     @property
     def health_points(self):
         if self.health_points_ < 0:
@@ -27,6 +28,7 @@ class BaseUnit(ABC):
         return round(self.stamina_points_, 1)
 
     def attack(self, target: BaseUnit) -> str:
+        """Attack logic"""
         if self.stamina_points_ >= self.weapon.stamina_per_hit:
 
             # Просчитать нанесенный дамаг цели
@@ -41,9 +43,6 @@ class BaseUnit(ABC):
             if target.stamina_points_ < 0:
                 target.stamina_points_ = 0
 
-            print(f'{self.name} потрачено выносливости: {self.weapon.stamina_per_hit}')
-            print(f'{target.name} потрачено выносливости: {target.armor.stamina_per_turn}')
-
             if damage_inflicted > 0:
                 return (f"{self.name}, используя {self.weapon.name}, "
                         f"пробивает {target.armor.name} соперника и наносит {damage_inflicted} урона.")
@@ -57,7 +56,7 @@ class BaseUnit(ABC):
         """Использование абилки"""
         if self.skill_used:
             return (f"{self.name} попытался использовать {self.unit_class.skill.name}, "
-                    f"но прием уже был применен.")
+                    f"но навык уже был использован.")
         self.skill_used = True
         return self.unit_class.skill.use(user=self, target=target)
 
@@ -71,12 +70,8 @@ class BaseUnit(ABC):
         else:
             damage_inflicted = damage - defence
 
-        print(f'{self.name} урон от оружия: {damage}')
-        print(f'{target.name} защита: {defence}')
-        print(f'{target.name} получает урон: {damage_inflicted}')
         return round(damage_inflicted, 1)
 
     def _get_damage(self, damage_inflicted: float) -> None:
         """Уменьшить хп на величину полученного урона"""
         self.health_points_ -= damage_inflicted
-

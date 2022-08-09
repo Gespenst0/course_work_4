@@ -2,7 +2,7 @@ from typing import Dict
 
 
 class BaseSingleton(type):
-    _instances: Dict[str, str] = {}
+    _instances: Dict = {}
 
     def __call__(cls, *args, **kwargs):
         if cls not in cls._instances:
